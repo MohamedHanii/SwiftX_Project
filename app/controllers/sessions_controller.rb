@@ -1,18 +1,26 @@
 class SessionsController < ApplicationController
-    skip_before_action :verify_authenticity_token, only: :create
+    skip_before_action :verify_authenticity_token
+    before_action  :require_user, only:[:destroy]
+
 
     # /login
     def create
         user = User.find_by(username: params[:username])
-        print "here ",user.username
-        print "here ",user.password
-        print "here ",params[:password]
-        if user&.authenticate(params[:password])
+        if user.present? && user&.authenticate(params[:password])
           token = JWT.encode({ user_id: user.id }, 'secert_key', 'HS256')
+          session[:user_id] = user.id
           render json: { token: token }
         else
           render json: { error: 'Invalid email or password' }, status: :unauthorized
         end
-      end
+    end
+
+    #logout
+    def destroy
+        # deletes user session
+        session[:user_id] = nil
+        render json: { "message":"User logged out" }
+    end
+
 
 end

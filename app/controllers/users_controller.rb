@@ -1,15 +1,14 @@
 class UsersController < ApplicationController
-    protect_from_forgery with: :null_session
+    skip_before_action :verify_authenticity_token
 
 
-    #Create Application
+    #Create User
     #POST /user
     def create 
-        print params
         user = User.new(user_params)    
-        print user
         if user.save
             token = JWT.encode({ user_id: user.id }, 'secert_key', 'HS256')
+            session[:user_id] = user.id
             render json: { token: token }
         else
             render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
@@ -17,12 +16,7 @@ class UsersController < ApplicationController
     end
 
 
-
-    def json_render(reply)
-        render json: reply.as_json(:except => :id)
-    end
-
     def user_params
         params.permit(:username, :password, :role_id)
-      end
+    end
 end
