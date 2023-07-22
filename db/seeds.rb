@@ -5,3 +5,8 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+roles = %w[admin manager user]
+
+roles.each do |role_name|
+  Role.create(role_type: role_name)
+end
