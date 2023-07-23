@@ -25,9 +25,9 @@ class JoggingTimesController < ApplicationController
 
     def update
         if @jogging_time.update(jogging_time_params)
-        render json: @jogging_time
+            render json: @jogging_time
         else
-        render json: { errors: @jogging_time.errors.full_messages }, status: :unprocessable_entity
+            render json: { errors: @jogging_time.errors.full_messages }, status: :unprocessable_entity
         end
     end
 

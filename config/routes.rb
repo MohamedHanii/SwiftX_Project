@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   delete 'logout', to: 'sessions#destroy' 
   resources :jogging_times, except: [:new, :edit]
 
-  resources :users
+  resources :users, except: [:new, :edit]
 end

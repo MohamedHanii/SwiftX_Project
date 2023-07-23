@@ -15,5 +15,11 @@ class ApplicationController < ActionController::Base
         end
     end
 
+    def haveManagerAccess
+        if @current_user.role_id == 3
+            render json: { error: 'You are not allowed to do that operation' }, status: :forbidden
+        end
+    end 
+
 
 end
