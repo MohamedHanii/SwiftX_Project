@@ -61,6 +61,19 @@ class JoggingTimesController < ApplicationController
         render json: { message: 'Jogging time deleted successfully' }, status: :no_content
     end
 
+    #GET /jogging_time/weekly_report
+    #get all average distance and time for each week
+    def weekly_report
+
+        weekly_report = JoggingTime.select(
+            "strftime('%Y-%m-%d', created_at, 'weekday 0', '-7 days') AS week_start",
+            "AVG(time) AS average_time",
+            "AVG(distance) AS average_distance"
+          ).where(user_id: current_user.id).group("week_start").order("week_start")
+
+        json_render(weekly_report)
+      end
+
 
     private
 
@@ -87,6 +100,10 @@ class JoggingTimesController < ApplicationController
           render json: { error: 'Unauthorized' }, status: :unauthorized
         end
     end
-    
+
+    def json_render(reply)
+        render json: reply.as_json(:except => [:id, :id])
+      end
+
 
 end
